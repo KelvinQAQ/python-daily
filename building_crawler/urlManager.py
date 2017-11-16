@@ -24,8 +24,12 @@ class UrlManager(object):
             return None              # 如果new_urls为空数组，返回None
     
     def addurl(self, url):
-        print('add a new url...  <%s>' % (url,))
-        self.new_urls.append(url)
+        if (url not in self.done_urls) and (url not in self.new_urls):
+            print('add a new url...  <%s>' % (url,))
+            self.new_urls.append(url)
+            return True
+        else:
+            return False
 
     def processed(self):
         if self.processing:
@@ -36,6 +40,7 @@ class UrlManager(object):
         else:
             print('<Error> There is no url processing...')
 
+    @property
     def count(self):
         return [len(self.new_urls), len(self.done_urls)]
 
@@ -46,5 +51,8 @@ if __name__ == '__main__':
     urlManager.addurl('http://www.google.com')
     urlManager.addurl('http://www.bing.com')
     for _ in range(0, 6):
+        print('---newurls: %d,  doneurls: %d---' % tuple(urlManager.count))
         urlManager.geturl()
         urlManager.processed()
+        print('--------------------------------\n')
+        
