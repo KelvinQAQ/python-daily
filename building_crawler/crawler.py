@@ -12,8 +12,12 @@ from urlManager import UrlManager
 
 class WebRequester(object):
 
-    url = ''
-
     def __init__(self):
         pass
 
+    @staticmethod
+    def request(urlManager):
+        url = urlManager.geturl()
+        resp = urlopen(url)
+        url.processed()
+        return resp
