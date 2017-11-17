@@ -43,10 +43,10 @@ class HTMLResolver(object):
 
 if __name__ == '__main__':
     urlManager = UrlManager('http://en.wikipedia.org/wiki/Main_Page')
-    for i in range(1, 11):
+    for i in range(1, 101):
         print('crawling No.%d url...' % (i,))
         resp = WebRequester.request(urlManager)
-        items = HTMLResolver.getItems(resp, 'a', href=re.compile(r'(?!^[\w_:]+\.\w+$)(^/wiki)'))
+        items = HTMLResolver.getItems(resp, 'a', href=re.compile(r'(?!.+\.\w+$)(^/wiki)'))
         for item in items:
             fullurl = 'http://en.wikipedia.org' + item.attrs['href']
             b = urlManager.addurl(fullurl)
