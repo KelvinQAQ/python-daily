@@ -20,9 +20,10 @@ class WebRequester(object):
     @staticmethod
     def request(urlManager):
         url = urlManager.geturl()
-        resp = urlopen(url)
-        urlManager.processed()
-        return resp
+        if url:
+            resp = urlopen(url)
+            urlManager.processed()
+            return resp
 
 class HTMLResolver(object):
     
@@ -41,19 +42,32 @@ class HTMLResolver(object):
         item = bsObj.find(name=tag, attrs=attrs, **kwargs)
         return item
 
-if __name__ == '__main__':
-    urlManager = UrlManager('http://en.wikipedia.org/wiki/Main_Page')
-    for i in range(1, 101):
-        print('crawling No.%d url...' % (i,))
-        resp = WebRequester.request(urlManager)
-        items = HTMLResolver.getItems(resp, 'a', href=re.compile(r'(?!.+\.\w+$)(^/wiki)'))
-        for item in items:
-            fullurl = 'http://en.wikipedia.org' + item.attrs['href']
-            b = urlManager.addurl(fullurl)
-            if b:
-                with open('urls.txt', 'a') as f:
-                    f.write(fullurl + '\n')
+# if __name__ == '__main__':
+#     urlManager = UrlManager('http://en.wikipedia.org/wiki/Main_Page')
+#     for i in range(1, 101):
+#         print('crawling No.%d url...' % (i,))
+#         resp = WebRequester.request(urlManager)
+#         items = HTMLResolver.getItems(resp, 'a', href=re.compile(r'(?!.+\.\w+$)(^/wiki)'))
+#         for item in items:
+#             fullurl = 'http://en.wikipedia.org' + item.attrs['href']
+#             b = urlManager.addurl(fullurl)
+#             if b:
+#                 with open('urls.txt', 'a') as f:
+#                     f.write(fullurl + '\n')
     # with open('urls.txt', 'ab') as f:
     #     f.writelines(urlManager.new_urls)
     #     f.writelines(urlManager.done_urls)
-                
+
+if __name__ == '__main__':
+    urlManager = UrlManager('http://en.wikipedia.org/wiki/Main_Page')
+    resp = WebRequester.request(urlManager)
+    # bsObj = BeautifulSoup(resp, 'html5lib')
+    # bsObj1 = BeautifulSoup(resp, 'html5lib')
+    # items = bsObj.find(resp, 'a', href=re.compile(r'(?!.+\.\w+$)(^/wiki)'))
+    # items1 = bsObj1.find(resp, 'a', href=re.compile(r'(?!.+\.\w+$)(^/wiki)'))
+    # print(items == items1)
+
+    items = HTMLResolver.getItem(resp, 'a', href=re.compile(r'(?!.+\.\w+$)(^/wiki)'))
+    items1 = HTMLResolver.getItem(resp, 'a', href=re.compile(r'(?!.+\.\w+$)(^/wiki)'))
+    print(items == items1)
+
